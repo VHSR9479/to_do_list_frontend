@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="./asset/css/style.css">
+     <link href='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css' rel='stylesheet'>
+     <link href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css' rel='stylesheet'>
+     <script type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js'></script>
+      <script type='text/javascript' src='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js'></script>
+
+	<title>Listado de actividades</title>
+</head>
+
+<body ng-app="myapp">
+
+<div class="row d-flex justify-content-center container" ng-controller="ctrlmain">
+   
+    <div class="col-md-8">
+        <div class="card-hover-shadow-2x mb-3 card">
+            <div class="card-header-tab card-header">
+                <div class="card-header-title font-size-lg text-capitalize font-weight-normal"><i class="fa fa-tasks"></i>&nbsp;Task Lists</div>
+                <div class="col-md-12 align-self-end">
+                
+                <select ng-options="usuario as usuario.name for usuario in usuarios track by usuario.id" ng-model="idUsuario" ng-change="getActividades();"></select>
+               
+                </div>
+            </div>
+            <div class="scroll-area-sm">
+                <perfect-scrollbar class="ps-show-limits">
+                    <div style="position: static;" class="ps ps--active-y">
+                        <div class="ps-content">
+                            <ul class=" list-group list-group-flush">
+                                <li class="list-group-item" ng-repeat="actividad in actividades">
+                                    <div class="todo-indicator bg-warning"></div>
+                                    <div class="widget-content p-0">
+                                        <div class="widget-content-wrapper">
+                                            <div class="widget-content-left mr-2">
+                                                <div class=""> 
+                                                    <button class="border-0 btn-transition btn btn-outline-success" data-toggle="collapse" data-target="#demo{{actividad.id}}"> 
+                                                        <i class="fa fa-check"></i>
+                                                    </button>
+                                                    <label class="custom-control-label" for="exampleCustomCheckbox12">&nbsp;</label> </div>
+                                            </div>
+                                            <div class="widget-content-left">
+                                                <div class="widget-subheading"><i>{{actividad.hora_inicial +'-'+actividad.hora_final}} </i></div>
+                                                <div class="widget-heading"> {{actividad.descripcion}}  <div class="badge badge-danger ml-2">{{actividad.descEstado}} </div>
+                                                    <div id="demo{{actividad.id}} " class="collapse row">
+                                                        <ul class="list-group">
+                                                            <li class="list-group-item" ng-repeat="comentario in comentarios" ng-if="comentario.id_actividad == actividad.id">{{comentario.descripcion}}
+                                                                <button class="border-0 btn-transition btn btn-outline-danger" ng-click="eliminarComentario(comentario.id)"> <i class="fa fa-trash"></i> </button> 
+                                                            </li>
+                                                            <li class="list-group-item">
+                                                                <button class="btn btn-primary form-control"ng-click="modalComentario(actividad.id);" data-toggle="modal" data-target="#myModal">Add Actividad</button> 
+                                                            </li>
+                                                           
+                                                          </ul>
+                                                        <div></div>
+                                                    </div>
+                                                </div>
+                                                
+                                            </div>
+                                            <div class="widget-content-right"> 
+                                                <button class="border-0 btn-transition btn btn-outline-success" ng-click="finalizarActividad(actividad)"> <i class="fa fa-check"></i></button> 
+                                                <button class="border-0 btn-transition btn btn-outline-danger" ng-click="eliminarActividad(actividad.id)"> <i class="fa fa-trash"></i> </button> 
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </perfect-scrollbar>
+            </div>
+            
+            <div class="d-block text-right card-footer">
+                <div class="row d-flex justify-content-center">
+                   <select ng-options="horario as horario.hora_inicial+'-'+horario.hora_final for horario in horarios track by horario.id" ng-model="idHorario">
+                   </select>
+                    <textarea class="form-control col-md-6" id="exampleFormControlTextarea1" rows="1" maxlength="30" ng-model="texto" placeholder="Ingrese Actividad"></textarea>
+                    <select ng-options="estado as estado.descripcion for estado in estados track by estado.id" ng-model="idEstado">
+                    </select>
+                   
+                </div>
+                <div class="alert alert-warning" ng-show="mensajeEst">
+                    <strong>Error!</strong> Debe ingresar los campos Usuario,Horario,Actividad y Estado {{mensaje}}.
+                  </div>
+                <button class="mr-2 btn btn-link btn-sm">Cancel</button>
+                <button class="btn btn-primary" ng-click="addActividad();">Add Comentario</button></div>
+        </div>
+    </div>
+     <!-- Modal -->
+ <div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div class="form-group">
+                <label for="comentario">Ingresa tu comentario:</label>
+                <input type="text" class="form-control" id="comentario" ng-model="textoComentario">
+                <button type="button" class="btn btn-primary form-control" ng-click="addComentario();" >Guardar Comentario</button> 
+                                                            
+              </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+</div>
+
+ 
+<script type="text/javascript" src="./asset/lib/angular.min.js"></script>
+<script type="text/javascript" src="./Controlador.js"></script>
+</body>
+</html>
